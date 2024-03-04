@@ -1,0 +1,118 @@
+<%- include('../partials/header/header.ejs') %>
+
+    <body>
+        <div class="container-scroller">
+            <%- include('../partials/navbar/navbar.ejs') %>
+                <div class="container-fluid page-body-wrapper">
+                    <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+                        <!-- partial:../partials/_sidebar.html -->
+                        <%- include('../partials/sidebar/sidebar.ejs') %>
+                            <div class="main-panel">
+                                <div class="content-wrapper">
+                                    <div class="row">
+                                        <div class="col-md-12 grid-margin transparent">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Total Users</p>
+                                                            <p class="fs-30 mb-2"><%= Alluser.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4 stretch-card transparent">
+                                                    <div class="card card-dark-blue">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Total Request</p>
+                                                            <p class="fs-30 mb-2"><%= userFormRequests.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
+                                                    <div class="card card-tale">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Today’s Request</p>
+                                                            <p class="fs-30 mb-2"><%= TodayRequest.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
+                                                    <div class="card card-tale">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Completed Request</p>
+                                                            <p class="fs-30 mb-2"><%= CompletedRequest.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 mb-4 stretch-card transparent">
+                                                    <div class="card card-tale">
+                                                        <div class="card-body">
+                                                            <p class="mb-4">Declined Request</p>
+                                                            <p class="fs-30 mb-2"><%= DeclinedRequest.length %></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 grid-margin stretch-card">
+                                            <div class="card tale-bg">
+                                                <div class="card-people mt-auto">
+                                                    <img src="/public/images/dashboard/people.svg" alt="people">
+                                                    <div class="weather-info">
+                                                        <div class="d-flex">
+                                                            <%  const currentDate1 = new Date(); const
+                                                                daysOfWeek=['Sunday', 'Monday' , 'Tuesday' , 'Wednesday', 'Thursday' , 'Friday' , 'Saturday' ]; const
+                                                                dayOfWeekIndex = currentDate1.getDay(); const
+                                                                currentDay = daysOfWeek[dayOfWeekIndex];  %>
+                                                                <script>
+                                                                    function updateTime() {
+                                                                        // Get current date
+                                                                        const currentDate = new Date();
+
+                                                                        // Get current time components
+                                                                        const hours = currentDate.getHours();
+                                                                        const minutes = currentDate.getMinutes();
+                                                                        const seconds = currentDate.getSeconds();
+
+                                                                        // Format the time components to ensure they have two digits
+                                                                        const formattedHours = hours < 10 ? '0' + hours : hours;
+                                                                        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                                                                        const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+                                                                        // Display the current time
+                                                                        document.getElementById('currentTime').textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+                                                                    }
+
+                                                                    // Ensure the script runs after the DOM is fully loaded
+                                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                                        // Update the time initially
+                                                                        updateTime();
+
+                                                                        // Update the time every second
+                                                                        setInterval(updateTime, 1000);
+                                                                    });
+                                                                </script>
+                                                                <div>
+                                                                    <h2 class="mb-0 font-weight-normal"><i
+                                                                            class="icon-clock mr-2"></i><span
+                                                                            id="currentTime"></span><sup></sup></h2>
+                                                                </div>
+                                                                <div class="ml-2">
+                                                                    <h4 class="location font-weight-normal"><%= currentDay %></h4>
+                                                                    <h6 class="font-weight-normal">Philippines</h6>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%- include('../partials/copyright/copyright.ejs'); %>
+                            </div>
+                </div>
+        </div>
+        <%- include('./../partials/footer/footer.ejs') %>

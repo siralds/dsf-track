@@ -1,0 +1,249 @@
+<%- include('../partials/header/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../partials/_navbar.html -->
+      <%- include('../partials/navbar/navbar.ejs') %>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+          <!-- partial -->
+          <!-- partial:../partials/_sidebar.html -->
+          <%- include('../partials/sidebar/sidebar.ejs') %>
+            <!-- partial -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                    <div class="row">
+                      <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                <h3 class="font-weight-bold">Requests Status</h3>
+                              </div>
+                            </div>
+                            <% if(userFormRequests && userFormRequests.filter(reqForm => ['approved', 'process'].includes(reqForm.status))) { %>
+                            <div class="row align-items-center justify-content-center">
+                              <div class="col-xl-12 ">
+                                <div class="row justify-content-between">
+                                  <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-6 d-flex mt-2">
+                                      <div class="row justify-content-center align-items-center d-flex">
+                                        <div class="col-12 mb-3">
+                                          <h5 class="mr-1">Filter Status:</h5>
+                                        </div>
+                                        <div class="col-12">
+                                          <select id="statusSelect" name="statusSelect" class="form-control form-control-sm" onchange="filterStatus()">
+                                            <option value="All" selected>All Status</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="process">Process</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="table-responsive text mt-5">
+                              <table id="filterTableStatus" class="table table-bordered expandable-table no-footer">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Fullname</th>
+                                    <th>Purpose</th>
+                                    <th>Created</th>
+                                    <th>Remark</th>
+                                    <th>Status</th>
+                                    <th>Admin Approved</th>
+                                    <th>Supply Approved</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                                  <tr class="text-center">
+                                    <td><%= user.fullname %></td>
+                                    <td>
+                                      <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#modal<%= reqForm._id %>">
+                                        View Purpose
+                                      </button>
+                                    </td>
+                                    <td><%= reqForm.dateCreated %></td>
+                                    <td><%= reqForm.remark %></td>
+                                    <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <td><%= reqForm.adminApproved %></td>
+                                    <%if(reqForm.supplyApprove) {%>
+                                      <td><%= reqForm.supplyApproved %></td>
+                                    <% }else{ %>
+                                      <td>Wating for Supply Approval</td>
+                                    <% } %>
+                                  </tr>
+                                  <% } %>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+                            </div>
+                            <% }else{ %>
+                              <p>No Request has been approved.</p>
+                              <% } %>
+                          </div>
+                          <!-- modal start -->
+                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'approved' || reqForm.status === 'process') {%>
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3> <hr style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;"/>
+                                <div class="modal-body text-justify">
+                                  <%= reqForm.purpose %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <% }); %>
+                        </div>
+                      </div>
+                      <!-- This is for status declined && completed -->
+                      <% if(userFormRequests && userFormRequests.filter(reqForm => ['completed', 'declined'].includes(reqForm.reqForm.status)).length > 0) { %>
+
+                      <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                <h3 class="font-weight-bold">Finalized Status</h3>
+                              </div>
+                            </div>
+                            <div class="row align-items-center justify-content-center">
+                              <div class="col-xl-12 ">
+                                <div class="row justify-content-between">
+                                  <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-6 d-flex mt-2">
+                                      <div class="row justify-content-center align-items-center d-flex">
+                                        <div class="col-12 mb-3">
+                                          <h5 class="mr-1">Filter Status:</h5>
+                                        </div>
+                                        <div class="col-12">
+                                          <select id="statusSelect1" name="statusSelect1" class="form-control form-control-sm" onchange="filterDoneStatus()">
+                                            <option value="All" selected>All Status</option>
+                                            <option value="declined">Declined</option>
+                                            <option value="completed">Completed</option>
+                                          </select>
+                                        </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="table-responsive text mt-5">
+                              <table id="filterTableStatus1" class="table table-bordered expandable-table no-footer">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Fullname</th>
+                                    <th>Purpose</th>
+                                    <th>Created</th>
+                                    <th>Remark</th>
+                                    <th>Status</th>
+                                    <th>Admin</th>
+                                    <th>Supply</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
+                                  <tr class="text-center">
+                                    <td><%= user.fullname %></td>
+                                    <td>
+                                      <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#modal<%= reqForm._id %>">
+                                        View Purpose
+                                      </button>
+                                    </td>
+                                    <td><%= reqForm.dateCreated %></td>
+                                    <td><%= reqForm.remark %></td>
+                                    <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <% if(reqForm.adminDeclined && reqForm.adminDeclined !== '') {%>
+                                      <td>Declined: <%= reqForm.adminDeclined %></td>
+                                    <% } else if(reqForm.adminApproved || reqForm.adminApproved !== ''){ %>
+                                      <td>Approved: <%= reqForm.adminApproved %></td>
+                                    <% } else{ %>
+                                      <td class="text-center">N/A</td>
+                                    <% } %>
+                                    <% if(reqForm.supplyDeclined && reqForm.supplyDeclined !== '') {%>
+                                      <td>Declined: <%= reqForm.supplyDeclined %></td>
+                                    <% } else if(reqForm.supplyApproved && reqForm.supplyApproved !== '') {%>
+                                        <td>Approved: <%= reqForm.supplyApproved %></td>
+                                    <% } else{ %>
+                                        <td class="text-center">N/A</td>
+                                    <% } %>
+                                  </tr>
+                                  <% } %>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+                            </div>
+                            
+                              
+                          </div>
+                          <!-- modal start -->
+                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'completed' || reqForm.status === 'declined') {%>
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3> <hr style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;"/>
+                                <div class="modal-body text-justify">
+                                  <%= reqForm.purpose %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <% }); %>
+                        </div>
+                      </div>
+                      <% } %>
+                    </div>
+              </div>
+              <%- include('../partials/copyright/copyright.ejs'); %>
+            </div>
+        </div>
+    </div>
+<script>
+  // this is for the filtering status
+  function filterDoneStatus() {
+        const selectedStatus = document.getElementById('statusSelect1').value;
+        const rows = document.querySelectorAll('#filterTableStatus1 tbody tr');
+        rows.forEach(row => {
+            row.style.display = 'none';
+        });
+
+        rows.forEach(row => {
+            const statusCell = row.querySelector('td:nth-child(5)');
+            const status = statusCell.textContent.trim();
+            const statusMatch = selectedStatus === 'All' || status === selectedStatus;
+            if (statusMatch) {
+                row.style.display = ''; 
+            }
+        });
+    }
+  // this is for the filtering status
+  function filterStatus() {
+        const selectedStatus = document.getElementById('statusSelect').value;
+        const rows = document.querySelectorAll('#filterTableStatus tbody tr');
+        rows.forEach(row => {
+            row.style.display = 'none';
+        });
+
+        rows.forEach(row => {
+            const statusCell = row.querySelector('td:nth-child(5)');
+            const status = statusCell.textContent.trim();
+            const statusMatch = selectedStatus === 'All' || status === selectedStatus;
+            if (statusMatch) {
+                row.style.display = ''; 
+            }
+        });
+    }
+</script>
+    <%- include('./../partials/footer/footer.ejs') %>

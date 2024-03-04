@@ -1,0 +1,130 @@
+<%- include('../partials/header/header.ejs') %>
+
+    <body>
+        <div class="container-scroller">
+            <!-- partial:../partials/_navbar.html -->
+            <%- include('../partials/navbar/navbar.ejs') %>
+                <!-- partial -->
+                <div class="container-fluid page-body-wrapper">
+                    <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+                        <!-- partial -->
+                        <!-- partial:../partials/_sidebar.html -->
+                        <%- include('../partials/sidebar/sidebar.ejs') %>
+                            <!-- partial -->
+                            <div class="main-panel">
+                                <div class="content-wrapper">
+                                    <div class="row">
+                                        <!-- This is for users display -->
+                                            <div class="col-md-12 grid-margin stretch-card">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                                                <h3 class="font-weight-bold">Users</h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row align-items-center justify-content-center">
+                                                            <div class="col-xl-12 ">
+                                                                <div class="row justify-content-between">
+                                                                    <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                                                        <div
+                                                                            class="input-group justify-content-center align-items-center">
+                                                                            <h5 class="mr-1">Search:</h5>
+                                                                            <input type="text"
+                                                                                class="form-control" name="name"
+                                                                                id="searchByFullname"
+                                                                                placeholder="Search Fullname"
+                                                                                aria-label="search" style="letter-spacing: 3px;"
+                                                                                aria-describedby="search" autocomplete="off">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4 col-md-6 col-xl-3 mt-2">
+                                                                        <div class="justify-content-end align-items-center d-flex text-center ">
+                                                                          <a href="/user/create" class="btn btn-primary btn-rounded d-flex align-items-center"><i
+                                                                              class="mdi mdi-plus text-center"></i>Add</a>
+                                                                        </div>
+                                                                      </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table-responsive text mt-5">
+                                                            <table
+                                                                class="table table-bordered expandable-table no-footer">
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th>User ID</th>
+                                                                        <th>Fullname</th>
+                                                                        <th>Email</th>
+                                                                        <th>Contact</th>
+                                                                        <th>Role</th>
+                                                                        <th>Actions</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <% usersData.forEach((user)=> { %>
+                                                                    <tr class="text-center">
+                                                                        <td><%= user._id %></td>
+                                                                        <td>
+                                                                            <%= user.fullname %>
+                                                                        </td>
+                                                                        <td><%= user.email %></td>
+                                                                        <td><%= user.contact %></td>
+                                                                        <td><label class="badge badge-<%= user.role %> text-capitalize">
+                                                                                <%= user.role %>
+                                                                            </label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <form action="/user/delete" method="post">
+                                                                                <div class="btn-group">
+                                                                                <a href="/user/edit/<%= user._id %>" class="btn btn-info p-2" title="Edit">
+                                                                                    <i class="mdi mdi-square-edit-outline"></i>
+                                                                                </a>
+                                                                                <input type="hidden" name="userId" id="userId" value="<%= user._id %>">
+                                                                                <button type="submit" class="btn btn-danger p-2"
+                                                                                    title="Delete">
+                                                                                    <i class="mdi mdi-delete"></i>
+                                                                                </button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                <% }); %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                                <!-- content-wrapper ends -->
+
+                                <%- include('../partials/copyright/copyright.ejs'); %>
+                            </div>
+                            <!-- main-panel ends -->
+                </div>
+        </div>
+
+        <script>
+            //for search input
+            document.addEventListener('DOMContentLoaded', function () {
+                const searchInput = document.getElementById('searchByFullname');
+                const deceasedRows = document.querySelectorAll('tbody tr');
+
+                searchInput.addEventListener('input', function () {
+                    const searchQuery = this.value.trim().toLowerCase();
+
+                    deceasedRows.forEach(row => {
+                        const fullName = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
+
+                        if (fullName.includes(searchQuery)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        </script>
+        <%- include('./../partials/footer/footer.ejs') %>

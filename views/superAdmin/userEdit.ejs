@@ -1,0 +1,72 @@
+<%- include('../partials/header/header.ejs') %>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <%- include('../partials/navbar/navbar.ejs') %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_sidebar.html -->
+      <%- include('../partials/sidebar/sidebar.ejs') %>
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-9 col-xl-9 mt-5 col-md-10 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title text-center">Edit User</h4>
+                  <form class="mt-5" action="/user/edit/<%= userToDisplay._id %>/doEdit" method="post">
+                    <% if(messages.error) {%>
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-12 col-sm-8 col-md-7 col-lg-6 col-xl-6 text-center bg-danger text-white mb-3 rounded">
+                                <h4 class="mt-2 text-center"><%= messages.error %></h4>
+                            </div>
+                        </div>
+                    <% } %>
+                    <div class="form-group">
+                      <label for="fullname" class="required">Fullname</label>
+                      <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Fullname" autocomplete="off" value="<%= userToDisplay.fullname %>" required/>
+                    </div>
+                    <div class="form-group">
+                      <label for="email" class="required">Email</label>
+                      <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" autocomplete="off" value="<%= userToDisplay.email %>" required/>
+                    </div>
+                    <div class="form-group">
+                      <label for="contact" class="required">Contact</label>
+                      <input type="text" class="form-control" name="contact" id="contact" placeholder="+639123456789" pattern="(\+639\d{2}-\d{3}-\d{4}|\+639\d{9}|09\d{2}-\d{3}-\d{4}|09\d{9})" autocomplete="off" value="<%= userToDisplay.contact %>" required/>
+                    </div>
+                    <div class="form-group">
+                    <label for="role" class="required">Role</label>
+                    <select class="form-control" id="role" name="role">
+                        <option value="member" <% if(userToDisplay.role === 'member') { %> selected <% } %>>Member</option>
+                        <option value="admin" <% if(userToDisplay.role === 'admin') { %> selected <% } %>>Admin</option>
+                        <option value="supply" <% if(userToDisplay.role === 'supply') { %> selected <% } %>>Supply</option>
+                        <option value="superAdmin" <% if(userToDisplay.role === 'superAdmin') { %> selected <% } %>>Super Admin</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password(Optional)</label>
+                      <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                      <label for="confirmPassword" class="">Confirm Password(Optional)</label>
+                      <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" autocomplete="off" />
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a href="/users" class="btn btn-light">Cancel</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <%- include('../partials/copyright/copyright.ejs'); %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+<%- include('../partials/footer/footer.ejs') %>

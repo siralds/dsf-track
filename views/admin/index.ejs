@@ -1,0 +1,399 @@
+<%- include('../partials/header/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../partials/_navbar.html -->
+      <%- include('../partials/navbar/navbar.ejs') %>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+            <!-- partial -->
+            <!-- partial:../partials/_sidebar.html -->
+            <%- include('../partials/sidebar/sidebar.ejs') %>
+              <!-- partial -->
+              <div class="main-panel">
+                <div class="content-wrapper">
+                  <%- include('../partials/welcome/welcome.ejs') %>
+                    <%- include('../partials/chart/chart.ejs') %>
+                      <div class="row">
+                        <div class="col-md-12 grid-margin stretch-card">
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="row">
+                                <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                  <h3 class="font-weight-bold">Waiting for your Approval</h3>
+                                </div>
+                              </div>
+                              <div class="row align-items-center justify-content-center">
+                                <div class="col-xl-12 ">
+                                  <div class="row justify-content-between">
+                                    <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                      <div class="input-group justify-content-center align-items-center">
+                                        <h5 class="mr-1">Search:</h5>
+                                        <input type="text" class="form-control d-flex" name="searchFullname"
+                                          id="searchFullname" placeholder="Search Name" aria-label="search"
+                                          aria-describedby="search">
+                                      </div>
+                                    </div>
+                                    <div class="col-4 col-md-6 col-xl-3 mt-2">
+                                      <div class="justify-content-end align-items-center d-flex text-center ">
+                                        <a href="/request"
+                                          class="btn btn-primary btn-rounded d-flex align-items-center"><i
+                                            class="mdi mdi-plus text-center"></i>Add</a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="table-responsive text mt-5">
+                                <table id="searchFullnameTable" class="table table-bordered expandable-table no-footer">
+                                  <thead>
+                                    <tr class="text-center">
+                                      <th>Fullname</th>
+                                      <th>Purpose</th>
+                                      <th>Created</th>
+                                      <th>Status</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status==='pending' ) {%>
+                                        <tr class="text-center">
+                                          <td>
+                                            <%= user.fullname %>
+                                          </td>
+                                          <td>
+                                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                              data-target="#modal<%= reqForm._id %>">
+                                              View Purpose
+                                            </button>
+                                          </td>
+                                          <td>
+                                            <%= reqForm.dateCreated %>
+                                          </td>
+                                          <td><label class="badge badge-<%= reqForm.status %> text-capitalize">
+                                              <%= reqForm.status %>
+                                            </label></td>
+                                          <td>
+                                            <form action="" method="post">
+                                              <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-info p-2" data-toggle="modal"
+                                                  data-target="#modalapproved<%= reqForm._id %>" title="Approved">
+                                                  <i class="mdi mdi-check-circle-outline"></i>
+                                                </button>
+                                                <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
+                                                <button type="button" class="btn btn-danger btn-fw p-2" data-toggle="modal"
+                                                data-target="#modaldeclined<%= reqForm._id %>" title="Declined">
+                                                  <i class="mdi mdi-close-circle-outline"></i>
+                                                </button>
+                                              </div>
+                                            </form>
+                                          </td>
+                                        </tr>
+                                        <% } %>
+                                          <% }); %>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <!-- modal start -->
+                            <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                              <% if(reqForm.status==='pending' ) {%>
+                                <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false" tabindex="-1"
+                                  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                      <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3>
+                                      <hr
+                                        style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;" />
+                                      <div class="modal-body text-justify">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<%= reqForm.purpose %>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                                <% } %>
+                                  <% }); %>
+
+                                    <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status==='pending' ) {%>
+                                        <div class="modal fade" id="modaldeclined<%= reqForm._id %>"
+                                          data-backdrop="static" data-keyboard="false" tabindex="-1"
+                                          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h4 class="modal-title" id="staticBackdropLabel">Declined</h4>
+                                              </div>
+                                              <form action="/admin/declined" method="post">
+                                                <div class="modal-body text-justify">
+                                                  <div class="form-group">
+                                                    <input type="hidden" name="reqFormId" value="<%= reqForm._id %>">
+                                                    <label for="dropdownMenuButtonRemark"
+                                                      class="font-weight-bold required">Remark</label>
+                                                    <div class="dropdown" id="dropdowndeclined<%= reqForm._id %>">
+                                                      <input type="text" class="form-control dropdown-toggle"
+                                                        id="dropdownMenuButtonRemark" name="remark"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" placeholder="Select an option"
+                                                        autocomplete="off" required>
+                                                      <div class="dropdown-menu">
+                                                        <div class="dropdown-item">For clarification, Please see Admin Office.</div>
+                                                        <div class="dropdown-item">Declined, Please see Admin Office.</div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <br />
+                                                  <br />
+                                                  <br />
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary text-white"
+                                                    data-dismiss="modal">Cancel</button>
+                                                  <button type="submit" class="btn btn-danger">Declined</button>
+                                                </div>
+                                              </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <% } %>
+                                          <% }); %>
+                                    <% allFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status==='pending' ) {%>
+                                        <div class="modal fade" id="modalapproved<%= reqForm._id %>"
+                                          data-backdrop="static" data-keyboard="false" tabindex="-1"
+                                          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                          <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h4 class="modal-title" id="staticBackdropLabel">Approved</h4>
+                                              </div>
+                                              <form action="/admin/approved" method="post">
+                                                <div class="modal-body text-justify">
+                                                  <div class="form-group">
+                                                    <input type="hidden" name="reqFormId" value="<%= reqForm._id %>">
+                                                    <label for="dropdownMenuButtonRemark"
+                                                      class="font-weight-bold required">Remark</label>
+                                                    <div class="dropdown" id="dropdown<%= reqForm._id %>">
+                                                      <input type="text" class="form-control dropdown-toggle"
+                                                        id="dropdownMenuButtonRemark" name="remark"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" placeholder="Select an option"
+                                                        autocomplete="off" required>
+                                                      <div class="dropdown-menu">
+                                                        <div class="dropdown-item">Approved, Submitted to Supply Office.</div>
+                                                        
+                                                        
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  
+                                                  <br />
+                                                  <br />
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary text-white"
+                                                    data-dismiss="modal">Cancel</button>
+                                                  <button type="submit" class="btn btn-info">Approve</button>
+                                                </div>
+                                              </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <% } %>
+                                          <% }); %>
+                          </div>
+                        </div>
+
+                        <!-- this is for the user Request individual -->
+                        <% const pendingRequests=userFormRequests.filter(reqForm=> reqForm.reqForm.status ===
+                          'pending'); %>
+                          <% if(pendingRequests.length> 0) { %>
+                            <div class="col-md-12 grid-margin stretch-card">
+                              <div class="card">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                      <h3 class="font-weight-bold">Your Requests</h3>
+                                    </div>
+                                  </div>
+                                  <div class="row align-items-center justify-content-center">
+                                    <div class="col-xl-12 ">
+                                      <div class="row justify-content-between">
+                                        <div class="col-10 col-md-7 col-xl-5 mt-2">
+                                          <div class="input-group justify-content-center align-items-center">
+                                            <h5 class="mr-1">Search:</h5>
+                                            <input type="date" class="form-control d-flex" name="searchByDate"
+                                              id="searchByDate" placeholder="Search Date" aria-label="search"
+                                              aria-describedby="search">
+                                          </div>
+                                        </div>
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="table-responsive text mt-5">
+                                    <table id="searchByDateTable" class="table table-bordered expandable-table no-footer">
+                                      <thead>
+                                        <tr class="text-center">
+                                          <th>Fullname</th>
+                                          <th>Purpose</th>
+                                          <th>Created</th>
+                                          <th>Status</th>
+                                          <th>Actions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                          <% if(reqForm.status==='pending' ) {%>
+                                            <tr class="text-center">
+                                              <td>
+                                                <%= user.fullname %>
+                                              </td>
+                                              <td>
+                                                <button type="button" class="btn btn-info" data-toggle="modal"
+                                                  data-target="#modal<%= reqForm._id %>">
+                                                  View Purpose
+                                                </button>
+                                              </td>
+                                              <td>
+                                                <%= reqForm.dateCreated %>
+                                              </td>
+                                              <td><label class="badge badge-<%= reqForm.status %> text-capitalize">
+                                                  <%= reqForm.status %>
+                                                </label></td>
+                                              <td>
+                                                <form action="/deleteRequest" method="post">
+                                                  <div class="btn-group">
+                                                    <a href="/request/<%= reqForm._id %>" class="btn btn-info p-2"
+                                                      title="Edit">
+                                                      <i class="mdi mdi-square-edit-outline"></i>
+                                                    </a>
+                                                    <input type="hidden" name="reqId" id="reqId"
+                                                      value="<%= reqForm._id %>">
+                                                    <button type="submit" class="btn btn-danger p-2" title="Delete">
+                                                      <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                  </div>
+                                                </form>
+                                              </td>
+                                            </tr>
+                                            <% } %>
+                                              <% }); %>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                            <% } %>
+
+                      </div>
+                </div>
+                <!-- content-wrapper ends -->
+
+
+                <!-- partial:../partials/_footer.html -->
+                <%- include('../partials/copyright/copyright.ejs'); %>
+                  <!-- partial -->
+              </div>
+              <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <script>
+      //for searchByDate input
+      document.addEventListener('DOMContentLoaded', function () {
+      const searchByDate = document.getElementById('searchByDate');
+      const requestformRows = document.querySelectorAll('#searchByDateTable tbody tr');
+
+      searchByDate.addEventListener('input', function () {
+        const searchQuery = this.value.trim(); // No need to convert to lowercase
+
+        requestformRows.forEach(row => {
+          const dateCell = row.querySelector('td:nth-child(3)');
+          const dateText = dateCell.textContent.trim(); // Extract text content
+          const rowDate = new Date(dateText.replace(/-/g, '/')); // Replace dashes with slashes for cross-browser compatibility
+          console.log(dateText)
+          // Check if the entered date matches the row's date
+          if (dateText === searchQuery) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+      //for search input
+      document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchFullname');
+        const deceasedRows = document.querySelectorAll('#searchFullnameTable tbody tr');
+
+        searchInput.addEventListener('input', function () {
+          const searchQuery = this.value.trim().toLowerCase();
+
+          deceasedRows.forEach(row => {
+            const fullName = row.querySelector('td:first-child').textContent.trim().toLowerCase();
+
+            if (fullName.includes(searchQuery)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+      });
+      //
+      document.addEventListener("DOMContentLoaded", function () {
+        const modals = document.querySelectorAll('[id^="modalapproved"]');
+
+        modals.forEach(function (modal) {
+          const reqFormId = modal.id.replace("modalapproved", "");
+
+          const dropdown = modal.querySelector('#dropdown' + reqFormId);
+          const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+          const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+          dropdownMenu.addEventListener('click', function (event) {
+            if (event.target.classList.contains('dropdown-item')) {
+              dropdownToggle.value = event.target.textContent.trim();
+            }
+          });
+
+          document.addEventListener('click', function (event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+              dropdownMenu.classList.remove('show');
+            }
+          });
+        });
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const modals = document.querySelectorAll('[id^="modaldeclined"]');
+
+        modals.forEach(function (modal) {
+          const reqFormId = modal.id.replace("modaldeclined", "");
+
+          const dropdown = modal.querySelector('#dropdowndeclined' + reqFormId);
+          const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+          const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+
+          dropdownMenu.addEventListener('click', function (event) {
+            if (event.target.classList.contains('dropdown-item')) {
+              dropdownToggle.value = event.target.textContent.trim();
+            }
+          });
+
+          document.addEventListener('click', function (event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+              dropdownMenu.classList.remove('show');
+            }
+          });
+        });
+      });
+    </script>
+
+    <%- include('./../partials/footer/footer.ejs') %>

@@ -1,0 +1,40 @@
+<%- include('../partials/header/header.ejs') %>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <%- include('../partials/navbar/navbar.ejs') %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_sidebar.html -->
+      <%- include('../partials/sidebar/sidebar.ejs') %>
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-8 col-xl-8 mt-5 col-md-9 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Request Now!</h4>
+                  <form class="mt-5" action="/request" method="post">
+                    <div class="form-group">
+                      <label for="purpose" class="required">Purpose</label>
+                      <textarea class="form-control" id="purpose" name="purpose" rows="4" required autocomplete="off"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <a href="" class="btn btn-light">Cancel</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <%- include('../partials/copyright/copyright.ejs'); %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+<%- include('../partials/footer/footer.ejs') %>

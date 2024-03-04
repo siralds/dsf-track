@@ -1,0 +1,90 @@
+<%
+function activeClass(link) {
+    return currentUrl === link ? 'active' : '';
+}
+%>
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <% if(user.role === 'member'){ %>
+      <li class="nav-item <%= activeClass('/') %>">
+        <a class="nav-link" href="/">
+          <i class="mdi mdi-home menu-icon"></i>
+          <span class="menu-title">Home</span>
+        </a>
+      </li>
+      <li class="nav-item <%= activeClass('/requests') %>">
+        <a class="nav-link" href="/requests">
+          <i class="mdi mdi-file-multiple menu-icon"></i>
+          <span class="menu-title">Requests</span>
+        </a>
+      </li>
+      <% }else if(user.role === 'admin') {%>
+      <li class="nav-item <%= activeClass('/admin') %>">
+        <a class="nav-link" href="/admin">
+          <i class="mdi mdi-home menu-icon"></i>
+          <span class="menu-title">Home</span>
+        </a>
+      </li>
+      <li class="nav-item <%= activeClass('/users/requests') %>">
+        <a class="nav-link" href="/users/requests">
+          <i class="mdi mdi-file-multiple menu-icon"></i>
+          <span class="menu-title">Requests</span>
+        </a>
+      </li>
+      <% }else if(user.role === 'supply') {%>
+      <li class="nav-item <%= activeClass('/supply') %>">
+        <a class="nav-link" href="/supply">
+          <i class="mdi mdi-home menu-icon"></i>
+          <span class="menu-title">Home</span>
+        </a>
+      </li>
+      <li class="nav-item <%= activeClass('/users/requests/process') %>">
+        <a class="nav-link" href="/users/requests/process">
+          <i class="mdi mdi-file-multiple menu-icon"></i>
+          <span class="menu-title">Requests</span>
+        </a>
+      </li>
+      <% }else if(user.role === 'superAdmin'){%>
+        <li class="nav-item <%= activeClass('/superadmin') %>">
+          <a class="nav-link" href="/superadmin">
+            <i class="mdi mdi-home menu-icon"></i>
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        <li class="nav-item <%= activeClass('/users') %>">
+          <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+            <i class="icon-head menu-icon"></i>
+            <span class="menu-title">Users View</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="auth">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="/users"> Users Lists </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/user/create"> Add User </a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" data-toggle="collapse" href="#auth1" aria-expanded="false" aria-controls="auth1">
+            <i class="mdi mdi-file-multiple menu-icon"></i>
+            <span class="menu-title">Requests View</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="auth1">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="/requests/pending"> Pending Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/requests/process"> Process Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/requests/finalized"> Finalized Status </a></li>
+              <li class="nav-item"> <a class="nav-link" href="/request"> Add Status </a></li>
+            </ul>
+          </div>
+        </li>
+      <% } %>
+      <li class="nav-item">
+        <a class="nav-link" href="pages/documentation/documentation.html">
+          <i class="icon-paper menu-icon"></i>
+          <span class="menu-title">Help Center</span>
+        </a>
+      </li>
+    </ul>
+  </nav>

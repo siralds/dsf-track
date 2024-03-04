@@ -1,0 +1,148 @@
+<%- include('../partials/header/header.ejs') %>
+
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../partials/_navbar.html -->
+      <%- include('../partials/navbar/navbar.ejs') %>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+          <%- /* include('../partials/sidebar/right-sidebar.ejs'); */ %>
+          <!-- partial -->
+          <!-- partial:../partials/_sidebar.html -->
+          <%- include('../partials/sidebar/sidebar.ejs') %>
+            <!-- partial -->
+            <div class="main-panel">
+              <div class="content-wrapper">
+                <%- include('../partials/welcome/welcome.ejs') %>
+                  <%- include('../partials/chart/chart.ejs') %>
+                    <div class="row">
+                      <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-12 col-md-6 col-xl-8 mb-1 mb-xl-3">
+                                <h3 class="font-weight-bold">Your Requests</h3>
+                              </div>
+                            </div>
+                            <div class="row align-items-center justify-content-center">
+                              <div class="col-xl-12 ">
+                                <div class="row justify-content-between">
+                                  <div class="col-8 col-md-6 col-xl-5 mt-2">
+                                    <div class="input-group justify-content-center align-items-center">
+                                      <h5 class="mr-1">Search:</h5>
+                                      <input type="date" class="form-control" style="letter-spacing: 3px;" name="searchByDate"
+                                              id="searchByDate" placeholder="Search Date" aria-label="search"
+                                              aria-describedby="search">
+                                    </div>
+                                  </div>
+                                  <div class="col-4 col-md-6 col-xl-3 mt-2">
+                                    <div class="justify-content-end align-items-center d-flex text-center ">
+                                      <a href="/request" class="btn btn-primary btn-rounded d-flex align-items-center"><i
+                                          class="mdi mdi-plus text-center"></i>Add</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="table-responsive text mt-5">
+                              <table id="searchByDateTable" class="table table-bordered expandable-table no-footer">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Fullname</th>
+                                    <th>Purpose</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                                      <% if(reqForm.status === 'pending') {%>
+                                  <tr class="text-center">
+                                    <td><%= user.fullname %></td>
+                                    <td>
+                                      <button type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#modal<%= reqForm._id %>">
+                                        View Purpose
+                                      </button>
+                                    </td>
+                                    <td><%= reqForm.dateCreated %></td>
+                                    <td><label class="badge badge-<%= reqForm.status %> text-capitalize"><%= reqForm.status %></label></td>
+                                    <td>
+                                      <form action="/deleteRequest" method="post">
+                                        <div class="btn-group">
+                                          <a href="/request/<%= reqForm._id %>" class="btn btn-info p-2" title="Edit">
+                                            <i class="mdi mdi-square-edit-outline"></i>
+                                          </a>
+                                          <input type="hidden" name="reqId" id="reqId" value="<%= reqForm._id %>">
+                                          <button type="submit" class="btn btn-danger p-2"
+                                            title="Delete">
+                                            <i class="mdi mdi-delete"></i>
+                                          </button>
+                                        </div>
+                                      </form>
+                                    </td>
+                                  </tr>
+                                  <% } %>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <!-- modal start -->
+                          <% userFormRequests.forEach(({ reqForm, user })=> { %>
+                            <% if(reqForm.status === 'pending') {%>
+                          <div class="modal fade" id="modal<%= reqForm._id %>" data-keyboard="false"
+                            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <h3 class="modal-title text-center p-3" id="staticBackdropLabel">Purpose</h3> <hr style="margin-top:5px; margin-bottom:2px; height:1px; width:100%; border-top:1px solid gray;"/>
+                                <div class="modal-body text-justify">
+                                  <%= reqForm.purpose %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } %>
+                          <% }); %>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+              <!-- content-wrapper ends -->
+
+
+              <!-- partial:../partials/_footer.html -->
+              <%- include('../partials/copyright/copyright.ejs'); %>
+              <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+<script>
+  //for searchByDate input
+  document.addEventListener('DOMContentLoaded', function () {
+      const searchByDate = document.getElementById('searchByDate');
+      const requestformRows = document.querySelectorAll('#searchByDateTable tbody tr');
+
+      searchByDate.addEventListener('input', function () {
+        const searchQuery = this.value.trim(); // No need to convert to lowercase
+
+        requestformRows.forEach(row => {
+          const dateCell = row.querySelector('td:nth-child(3)');
+          const dateText = dateCell.textContent.trim(); // Extract text content
+          const rowDate = new Date(dateText.replace(/-/g, '/')); // Replace dashes with slashes for cross-browser compatibility
+          console.log(dateText)
+          // Check if the entered date matches the row's date
+          if (dateText === searchQuery) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+</script>
+    <%- include('./../partials/footer/footer.ejs') %>

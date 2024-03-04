@@ -1,0 +1,43 @@
+<%- include('../partials/header/header.ejs') %>
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <%- include('../partials/navbar/navbar.ejs') %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_sidebar.html -->
+      <%- include('../partials/sidebar/sidebar.ejs') %>
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper" >
+          <div class="row justify-content-center align-items-center" style="height: 60vh;">
+            <div class="col-12 col-sm-8 col-lg-5 col-md-5 col-xl-4 grid-margin stretch-card">
+                <div class="card pt-3 pb-3">
+                    <div class="card-body">
+                    <h4 class="card-title text-center rounded text-white bg-success p-3">Request Success</h4>
+                    <form class="forms-sample mt-1 text-center">
+                      <% if(user.role === 'member') { %>
+                        <a href="/" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'admin') { %>
+                        <a href="/admin" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'supply') { %>
+                        <a href="/supply" class="btn btn-light font-weight-bold">Home</a>
+                      <% }else if(user.role === 'superAdmin'){ %>
+                        <a href="/" class="btn btn-light font-weight-bold">Home</a>
+                      <% } %>
+                    </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <%- include('../partials/copyright/copyright.ejs'); %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+<%- include('../partials/footer/footer.ejs') %>
